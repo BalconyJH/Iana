@@ -1,32 +1,30 @@
-import asyncio
 import random
+import asyncio
+from io import BytesIO
 from datetime import datetime
 
+import skia
+from grpc import StatusCode
+from nonebot.log import logger
+from grpc.aio import AioRpcError
+from utils.dynrender_skia.Core import DynRender
+from dynamicadaptor.DynamicConversion import formate_message
+from nonebot.adapters.onebot.v11.message import MessageSegment
 from apscheduler.events import (
     EVENT_JOB_ERROR,
-    EVENT_JOB_EXECUTED,
     EVENT_JOB_MISSED,
+    EVENT_JOB_EXECUTED,
     EVENT_SCHEDULER_STARTED,
 )
-from grpc import StatusCode
-from grpc.aio import AioRpcError
-from nonebot.adapters.onebot.v11.message import MessageSegment
-from nonebot.log import logger
 
 from ... import config
-from ...bili_auth import bili_auth
 from ...database import DB as db
+from ...bili_auth import bili_auth
 from ...database import dynamic_offset as offset
-from ...utils import (
-    bilibili_request,
-    get_dynamic_screenshot,
-    get_user_dynamics,
-    safe_send,
-    scheduler,
-)
+from ...utils import safe_send, scheduler, bilibili_request, get_user_dynamics
 
 
-async def dy_sched():
+async def dy_sched():  # noqa: C901
     """动态推送"""
 
     # if not bili_auth.is_logined:
@@ -108,7 +106,14 @@ async def dy_sched():
         dynamic_id = int(dynamic["id_str"])
         if dynamic_id > offset[uid]:
             url = f"https://t.bilibili.com/{dynamic_id}"
-
+            msg = await formate_message("web", dynamic)
+            img = await DynRender().run(msg)
+            img_byte = BytesIO()
+            img = skia.Image.fromarray(
+                array=img, colorType=skia.ColorType.kRGBA_8888_ColorType
+            )
+            img.save(img_byte, skia.EncodedImageFormat.kPNG)
+            image = img_byte.getvalue()
             if dynamic["type"] in [
                 "DYNAMIC_TYPE_LIVE_RCMD",
                 "DYNAMIC_TYPE_LIVE",
@@ -120,7 +125,8 @@ async def dy_sched():
                 return
 
             logger.info(f"检测到新动态（{dynamic_id}）：{name}（{uid}）")
-            image = await get_dynamic_screenshot(dynamic_id)
+            # image = await get_dynamic_screenshot(dynamic_id)
+
             if image is None:
                 logger.debug(f"动态不存在，已跳过：{url}")
                 return

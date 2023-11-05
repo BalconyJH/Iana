@@ -5,6 +5,7 @@ from typing import Any, Dict, Union, Optional
 
 import httpx
 import nonebot
+from src import config
 from bilireq import get
 from nonebot import require
 from nonebot.rule import Rule
@@ -14,6 +15,7 @@ from bilireq.utils import DEFAULT_HEADERS
 from nonebot import on_command as _on_command
 from nonebot.exception import FinishedException
 from nonebot.permission import SUPERUSER, Permission
+from cli.handle_message_sent import GroupMessageSentEvent
 from nonebot.params import CommandArg, RawCommand, ArgPlainText
 from nonebot.adapters.onebot.v11.permission import GROUP_ADMIN, GROUP_OWNER
 from nonebot.adapters.onebot.v11.event import GroupMessageEvent, PrivateMessageEvent
@@ -26,9 +28,6 @@ from nonebot.adapters.onebot.v11 import (
     NetworkError,
     MessageSegment,
 )
-
-from .. import config
-from ..cli.handle_message_sent import GroupMessageSentEvent
 
 
 def get_path(*other):

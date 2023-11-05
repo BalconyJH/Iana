@@ -1,7 +1,7 @@
-import asyncio
 import os
 import re
 import sys
+import asyncio
 from pathlib import Path
 from typing import Optional
 
@@ -9,7 +9,6 @@ from nonebot.log import logger
 from playwright.__main__ import main
 
 try:
-    from playwright._impl._api_structures import FloatRect
     from playwright.async_api import Browser, async_playwright
 except ImportError:
     raise ImportError(
@@ -17,7 +16,8 @@ except ImportError:
         "https://aka.ms/vs/17/release/vc_redist.x64.exe"
     )
 
-from .. import config
+from src import config
+
 from .fonts_provider import fill_font
 
 _browser: Optional[Browser] = None
