@@ -1,13 +1,11 @@
-import asyncio
-import os
-import re
-import sys
 import json
 from pathlib import Path
 from typing import Any, List, Dict, Optional
-from pydantic import BaseSettings
+
 from bilireq.auth import Auth
 from nonebot.log import logger
+from pydantic import BaseSettings
+
 from . import config
 
 
@@ -43,7 +41,8 @@ class BiliAuth(BaseSettings):
         """获取token auth的dict格式的cookie"""
         return self.auth.cookies if self.auth else {}
 
-    def get_list_cookies_from_file(self) -> List[Any]:
+    @staticmethod
+    def get_list_cookies_from_file() -> List[Any]:
         """从文件读取浏览器cookie"""
         cookies = []
         if not config.haruka_cookie_file:
@@ -52,8 +51,7 @@ class BiliAuth(BaseSettings):
 
         try:
             cookies_raw = json.loads(Path(config.haruka_cookie_file).read_text("utf-8"))  # type: ignore
-            cookies = [{"name": ck["name"], "value": ck["value"], "path": ck["path"], "domain": ck["domain"]}
-                       for ck in cookies_raw]
+            cookies = [{"name": ck["name"], "value": ck["value"], "path": ck["path"], "domain": ck["domain"]} for ck in cookies_raw]
         except Exception as e:
             logger.error(f"读取cookie文件失败:{e}")
 
@@ -78,7 +76,8 @@ class BiliAuth(BaseSettings):
             cookies = self.get_dict_auth_cookies()
         return cookies
 
-    def save_cookies_to_file(self, cookies: List[Any]):
+    @staticmethod
+    def save_cookies_to_file(cookies: List[Any]):
         """保存浏览器cookie到文件"""
         if not config.haruka_cookie_file:
             logger.error("无法将cookie写入文件, 没有配置浏览器cookie文件路径")

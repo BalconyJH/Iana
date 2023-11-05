@@ -7,24 +7,24 @@ from ..utils import on_command, to_me, text_to_img
 from ..version import __version__
 from .. import config
 
-help = on_command("帮助", aliases={"help"},  rule=to_me(), priority=5, block=True) # 数值越小优先级越高
+help = on_command("帮助", aliases={"help"}, priority=5, block=True)  # 数值越小优先级越高
 
 
 @help.handle()
-async def _(event: MessageEvent, bot:Bot):
+async def _(event: MessageEvent, bot: Bot):
     bot_id = int(bot.self_id)
     if bot_id in config.bot_names:
         message = f"<font color=green><b>{config.bot_names[bot_id]}目前支持的功能：</b></font>\n（请将UID替换为需要操作的B站UID）\n"
     else:
         message = "<font color=green><b>Bot目前支持的功能：</b></font>\n（请将UID替换为需要操作的B站UID）\n"
 
-    plugin_names:List[str] = []
+    plugin_names: List[str] = []
     for matchers_list in matchers.values():
         for matcher in matchers_list:
             if (
-                matcher.plugin_name
-                and matcher.plugin_name.startswith("src")
-                and matcher.__doc__
+                    matcher.plugin_name
+                    and matcher.plugin_name.startswith("src")
+                    and matcher.__doc__
             ):
                 doc = matcher.__doc__
                 plugin_names.append(doc)
@@ -49,7 +49,7 @@ async def _(event: MessageEvent, bot:Bot):
     message += "绘画\n------------------------\n"
     message += "示例：开启动态 123456\n"
     message += "Tips：只发送 \"绘画\" 两个字将显示详细绘画帮助内容\n"
-    
+
     message = MessageSegment.image(await text_to_img(message, width=425))
     message += f"\n当前版本：v{__version__}\n" "https://github.com/Misaka-Mikoto-Tech"
     await help.finish(message)
