@@ -1,19 +1,18 @@
-# coding=utf-8
 """
 :author: Lyzen
 :date: 2023.01.13
 :brief: 直播开播检测
 """
+import time
 import random
 import threading
-import time
 import traceback
 from threading import Thread
 
 import requests
-from dylr.core import app, config, dy_api, monitor_thread_manager, record_manager
 from dylr.core.room_info import RoomInfo
-from dylr.util import cookie_utils, logger
+from dylr.util import logger, cookie_utils
+from dylr.core import app, config, dy_api, record_manager, monitor_thread_manager
 
 # 重要房间检测线程
 important_room_threads = []

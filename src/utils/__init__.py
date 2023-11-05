@@ -1,29 +1,31 @@
-import asyncio
 import sys
+import asyncio
 from pathlib import Path
-from typing import Union
+from typing import Any, Dict, Union, Optional
 
 import httpx
 import nonebot
-from nonebot import on_command as _on_command
+from bilireq import get
 from nonebot import require
-from nonebot.adapters.onebot.v11 import (
-    ActionFailed,
-    Bot,
-    Message,
-    MessageEvent,
-    MessageSegment,
-    NetworkError,
-)
-from nonebot.adapters.onebot.v11.event import GroupMessageEvent, PrivateMessageEvent
-from nonebot.adapters.onebot.v11.permission import GROUP_ADMIN, GROUP_OWNER
-from nonebot.exception import FinishedException
+from nonebot.rule import Rule
 from nonebot.log import logger
 from nonebot.matcher import Matcher
-from nonebot.params import ArgPlainText, CommandArg, RawCommand
+from bilireq.utils import DEFAULT_HEADERS
+from nonebot import on_command as _on_command
+from nonebot.exception import FinishedException
 from nonebot.permission import SUPERUSER, Permission
-from nonebot.rule import Rule
-from nonebot_plugin_guild_patch import ChannelDestroyedNoticeEvent, GuildMessageEvent
+from nonebot.params import CommandArg, RawCommand, ArgPlainText
+from nonebot.adapters.onebot.v11.permission import GROUP_ADMIN, GROUP_OWNER
+from nonebot.adapters.onebot.v11.event import GroupMessageEvent, PrivateMessageEvent
+from nonebot_plugin_guild_patch import GuildMessageEvent, ChannelDestroyedNoticeEvent
+from nonebot.adapters.onebot.v11 import (
+    Bot,
+    Message,
+    ActionFailed,
+    MessageEvent,
+    NetworkError,
+    MessageSegment,
+)
 
 from .. import config
 from ..cli.handle_message_sent import GroupMessageSentEvent
@@ -84,21 +86,21 @@ async def uid_check(
 
 
 async def _guild_admin(bot: Bot, event: GuildMessageEvent):
-    roles = set(
+    roles = {
         role["role_name"]
         for role in (
             await bot.get_guild_member_profile(
                 guild_id=event.guild_id, user_id=event.user_id
             )
         )["roles"]
-    )
+    }
     return bool(roles & set(config.haruka_guild_admin_roles))
 
 
 GUILD_ADMIN: Permission = Permission(_guild_admin)
 
 
-async def permission_check(
+async def permission_check(  # noqa: C901
     matcher: Matcher,
     bot: Bot,
     event: Union[
@@ -162,7 +164,9 @@ def to_me():
     return Rule(_to_me)
 
 
-async def safe_send(bot_id, send_type, type_id, message, at=False, prefix=None):
+async def safe_send(  # noqa: C901
+    bot_id, send_type, type_id, message, at=False, prefix=None
+):
     """发送出现错误时, 尝试重新发送, 并捕获异常且不会中断运行"""
 
     async def _safe_send(bot, send_type, type_id, message):
@@ -178,7 +182,7 @@ async def safe_send(bot_id, send_type, type_id, message, at=False, prefix=None):
             )
         else:
             result = await bot.call_api(
-                "send_" + send_type + "_msg",
+                f"send_{send_type}_msg",
                 **{
                     "message": message,
                     "user_id" if send_type == "private" else "group_id": type_id,
@@ -245,9 +249,7 @@ async def safe_send(bot_id, send_type, type_id, message, at=False, prefix=None):
 
 
 async def get_type_id(event: Union[MessageEvent, ChannelDestroyedNoticeEvent]):
-    if isinstance(event, GuildMessageEvent) or isinstance(
-        event, ChannelDestroyedNoticeEvent
-    ):
+    if isinstance(event, (GuildMessageEvent, ChannelDestroyedNoticeEvent)):
         from ..database import DB as db
 
         return await db.get_guild_type_id(
@@ -277,7 +279,7 @@ def on_startup():
     try:  # 如果开启 realod 只在第一次运行
         asyncio.get_running_loop()
     except RuntimeError:
-        from .browser import check_playwright_env, install
+        from .browser import install, check_playwright_env
 
         check_proxy()
         install()
@@ -299,4 +301,21 @@ PROXIES = {"all://": config.haruka_proxy}
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler  # noqa
 
-from .browser import get_dynamic_screenshot, get_github_screenshot  # noqa
+from .browser import get_github_screenshot, get_dynamic_screenshot  # noqa
+
+
+async def get_user_dynamics(
+    uid: int, cookies: Optional[Dict[str, Any]], ua: str, **kwargs
+):
+    """根据 UID 批量获取动态信息"""
+    url = "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space"
+    data = {"host_mid": uid}
+    headers = {
+        **DEFAULT_HEADERS,
+        **{
+            "User-Agent": ua,
+            "Origin": "https://space.bilibili.com",
+            "Referer": f"https://space.bilibili.com/{uid}/dynamic",
+        },
+    }
+    return await get(url, params=data, headers=headers, cookies=cookies, **kwargs)

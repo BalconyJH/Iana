@@ -1,14 +1,14 @@
-import _thread
-import gzip
 import os
+import gzip
 import time
+import _thread
 import traceback
 
 import websocket
 from dylr.core import app, dy_api
-from dylr.core.dy_protocol import ChatMessage, PushFrame, Response
-from dylr.util import cookie_utils, logger
 from google.protobuf import json_format
+from dylr.util import logger, cookie_utils
+from dylr.core.dy_protocol import Response, PushFrame, ChatMessage
 
 
 class DanmuRecorder:

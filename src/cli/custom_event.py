@@ -1,7 +1,11 @@
-from typing import Any, Dict, Literal, Optional, Set, Type, TypeVar
+from typing import Any, Set, Dict, Type, Literal, TypeVar, Optional
 
+from nonebot.log import logger
 from nonebot.adapters import Bot
+from nonebot.typing import overrides
 from nonebot.adapters import Bot as BaseBot
+from nonebot.exception import IgnoredException
+from nonebot.message import event_preprocessor
 from nonebot.adapters import Event as BaseEvent
 from nonebot.adapters.onebot.v11 import Adapter
 from nonebot.adapters.onebot.v11.event import (
@@ -9,10 +13,6 @@ from nonebot.adapters.onebot.v11.event import (
     GroupMessageEvent,
     PrivateMessageEvent,
 )
-from nonebot.exception import IgnoredException
-from nonebot.log import logger
-from nonebot.message import event_preprocessor
-from nonebot.typing import overrides
 
 Event_T = TypeVar("Event_T", bound=Type[Event])
 

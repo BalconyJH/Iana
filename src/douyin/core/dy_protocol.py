@@ -3,12 +3,13 @@
 
 import sys
 
-_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode("latin1"))
-from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
+from google.protobuf import descriptor as _descriptor
 from google.protobuf import reflection as _reflection
-from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import enum_type_wrapper
+from google.protobuf import symbol_database as _symbol_database
+
+_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode("latin1"))
 
 # @@protoc_insertion_point(imports)
 
@@ -8517,20 +8518,20 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 Response = _reflection.GeneratedProtocolMessageType(
     "Response",
     (_message.Message,),
-    dict(
-        RouteParamsEntry=_reflection.GeneratedProtocolMessageType(
+    {
+        "RouteParamsEntry": _reflection.GeneratedProtocolMessageType(
             "RouteParamsEntry",
             (_message.Message,),
-            dict(
-                DESCRIPTOR=_RESPONSE_ROUTEPARAMSENTRY,
-                __module__="dy_pb2"
+            {
+                "DESCRIPTOR": _RESPONSE_ROUTEPARAMSENTRY,
+                "__module__": "dy_pb2",
                 # @@protoc_insertion_point(class_scope:douyin.Response.RouteParamsEntry)
-            ),
+            },
         ),
-        DESCRIPTOR=_RESPONSE,
-        __module__="dy_pb2"
+        "DESCRIPTOR": _RESPONSE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Response)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Response)
 _sym_db.RegisterMessage(Response.RouteParamsEntry)
@@ -8538,174 +8539,174 @@ _sym_db.RegisterMessage(Response.RouteParamsEntry)
 Message = _reflection.GeneratedProtocolMessageType(
     "Message",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_MESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _MESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Message)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Message)
 
 ChatMessage = _reflection.GeneratedProtocolMessageType(
     "ChatMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_CHATMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _CHATMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.ChatMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(ChatMessage)
 
 LandscapeAreaCommon = _reflection.GeneratedProtocolMessageType(
     "LandscapeAreaCommon",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_LANDSCAPEAREACOMMON,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _LANDSCAPEAREACOMMON,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.LandscapeAreaCommon)
-    ),
+    },
 )
 _sym_db.RegisterMessage(LandscapeAreaCommon)
 
 RoomUserSeqMessage = _reflection.GeneratedProtocolMessageType(
     "RoomUserSeqMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_ROOMUSERSEQMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _ROOMUSERSEQMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.RoomUserSeqMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(RoomUserSeqMessage)
 
 CommonTextMessage = _reflection.GeneratedProtocolMessageType(
     "CommonTextMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_COMMONTEXTMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _COMMONTEXTMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.CommonTextMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(CommonTextMessage)
 
 UpdateFanTicketMessage = _reflection.GeneratedProtocolMessageType(
     "UpdateFanTicketMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_UPDATEFANTICKETMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _UPDATEFANTICKETMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.UpdateFanTicketMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(UpdateFanTicketMessage)
 
 RoomUserSeqMessageContributor = _reflection.GeneratedProtocolMessageType(
     "RoomUserSeqMessageContributor",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_ROOMUSERSEQMESSAGECONTRIBUTOR,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _ROOMUSERSEQMESSAGECONTRIBUTOR,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.RoomUserSeqMessageContributor)
-    ),
+    },
 )
 _sym_db.RegisterMessage(RoomUserSeqMessageContributor)
 
 GiftMessage = _reflection.GeneratedProtocolMessageType(
     "GiftMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_GIFTMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _GIFTMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.GiftMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(GiftMessage)
 
 GiftStruct = _reflection.GeneratedProtocolMessageType(
     "GiftStruct",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_GIFTSTRUCT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _GIFTSTRUCT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.GiftStruct)
-    ),
+    },
 )
 _sym_db.RegisterMessage(GiftStruct)
 
 GiftIMPriority = _reflection.GeneratedProtocolMessageType(
     "GiftIMPriority",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_GIFTIMPRIORITY,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _GIFTIMPRIORITY,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.GiftIMPriority)
-    ),
+    },
 )
 _sym_db.RegisterMessage(GiftIMPriority)
 
 TextEffect = _reflection.GeneratedProtocolMessageType(
     "TextEffect",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTEFFECT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTEFFECT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextEffect)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextEffect)
 
 TextEffectDetail = _reflection.GeneratedProtocolMessageType(
     "TextEffectDetail",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTEFFECTDETAIL,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTEFFECTDETAIL,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextEffectDetail)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextEffectDetail)
 
 MemberMessage = _reflection.GeneratedProtocolMessageType(
     "MemberMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_MEMBERMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _MEMBERMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.MemberMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(MemberMessage)
 
 PublicAreaCommon = _reflection.GeneratedProtocolMessageType(
     "PublicAreaCommon",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_PUBLICAREACOMMON,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _PUBLICAREACOMMON,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.PublicAreaCommon)
-    ),
+    },
 )
 _sym_db.RegisterMessage(PublicAreaCommon)
 
 EffectConfig = _reflection.GeneratedProtocolMessageType(
     "EffectConfig",
     (_message.Message,),
-    dict(
-        ExtraMapEntry=_reflection.GeneratedProtocolMessageType(
+    {
+        "ExtraMapEntry": _reflection.GeneratedProtocolMessageType(
             "ExtraMapEntry",
             (_message.Message,),
-            dict(
-                DESCRIPTOR=_EFFECTCONFIG_EXTRAMAPENTRY,
-                __module__="dy_pb2"
+            {
+                "DESCRIPTOR": _EFFECTCONFIG_EXTRAMAPENTRY,
+                "__module__": "dy_pb2",
                 # @@protoc_insertion_point(class_scope:douyin.EffectConfig.ExtraMapEntry)
-            ),
+            },
         ),
-        DESCRIPTOR=_EFFECTCONFIG,
-        __module__="dy_pb2"
+        "DESCRIPTOR": _EFFECTCONFIG,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.EffectConfig)
-    ),
+    },
 )
 _sym_db.RegisterMessage(EffectConfig)
 _sym_db.RegisterMessage(EffectConfig.ExtraMapEntry)
@@ -8713,317 +8714,317 @@ _sym_db.RegisterMessage(EffectConfig.ExtraMapEntry)
 Text = _reflection.GeneratedProtocolMessageType(
     "Text",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Text)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Text)
 
 TextPiece = _reflection.GeneratedProtocolMessageType(
     "TextPiece",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPiece)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPiece)
 
 TextPieceImage = _reflection.GeneratedProtocolMessageType(
     "TextPieceImage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECEIMAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECEIMAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPieceImage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPieceImage)
 
 TextPiecePatternRef = _reflection.GeneratedProtocolMessageType(
     "TextPiecePatternRef",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECEPATTERNREF,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECEPATTERNREF,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPiecePatternRef)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPiecePatternRef)
 
 TextPieceHeart = _reflection.GeneratedProtocolMessageType(
     "TextPieceHeart",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECEHEART,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECEHEART,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPieceHeart)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPieceHeart)
 
 TextPieceGift = _reflection.GeneratedProtocolMessageType(
     "TextPieceGift",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECEGIFT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECEGIFT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPieceGift)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPieceGift)
 
 PatternRef = _reflection.GeneratedProtocolMessageType(
     "PatternRef",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_PATTERNREF,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _PATTERNREF,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.PatternRef)
-    ),
+    },
 )
 _sym_db.RegisterMessage(PatternRef)
 
 TextPieceUser = _reflection.GeneratedProtocolMessageType(
     "TextPieceUser",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTPIECEUSER,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTPIECEUSER,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextPieceUser)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextPieceUser)
 
 TextFormat = _reflection.GeneratedProtocolMessageType(
     "TextFormat",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_TEXTFORMAT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _TEXTFORMAT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.TextFormat)
-    ),
+    },
 )
 _sym_db.RegisterMessage(TextFormat)
 
 LikeMessage = _reflection.GeneratedProtocolMessageType(
     "LikeMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_LIKEMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _LIKEMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.LikeMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(LikeMessage)
 
 SocialMessage = _reflection.GeneratedProtocolMessageType(
     "SocialMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_SOCIALMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _SOCIALMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.SocialMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(SocialMessage)
 
 PicoDisplayInfo = _reflection.GeneratedProtocolMessageType(
     "PicoDisplayInfo",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_PICODISPLAYINFO,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _PICODISPLAYINFO,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.PicoDisplayInfo)
-    ),
+    },
 )
 _sym_db.RegisterMessage(PicoDisplayInfo)
 
 DoubleLikeDetail = _reflection.GeneratedProtocolMessageType(
     "DoubleLikeDetail",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_DOUBLELIKEDETAIL,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _DOUBLELIKEDETAIL,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.DoubleLikeDetail)
-    ),
+    },
 )
 _sym_db.RegisterMessage(DoubleLikeDetail)
 
 DisplayControlInfo = _reflection.GeneratedProtocolMessageType(
     "DisplayControlInfo",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_DISPLAYCONTROLINFO,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _DISPLAYCONTROLINFO,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.DisplayControlInfo)
-    ),
+    },
 )
 _sym_db.RegisterMessage(DisplayControlInfo)
 
 EpisodeChatMessage = _reflection.GeneratedProtocolMessageType(
     "EpisodeChatMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_EPISODECHATMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _EPISODECHATMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.EpisodeChatMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(EpisodeChatMessage)
 
 MatchAgainstScoreMessage = _reflection.GeneratedProtocolMessageType(
     "MatchAgainstScoreMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_MATCHAGAINSTSCOREMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _MATCHAGAINSTSCOREMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.MatchAgainstScoreMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(MatchAgainstScoreMessage)
 
 Against = _reflection.GeneratedProtocolMessageType(
     "Against",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_AGAINST,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _AGAINST,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Against)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Against)
 
 Common = _reflection.GeneratedProtocolMessageType(
     "Common",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_COMMON,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _COMMON,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Common)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Common)
 
 User = _reflection.GeneratedProtocolMessageType(
     "User",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_USER,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _USER,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.User)
-    ),
+    },
 )
 _sym_db.RegisterMessage(User)
 
 FollowInfo = _reflection.GeneratedProtocolMessageType(
     "FollowInfo",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_FOLLOWINFO,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _FOLLOWINFO,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.FollowInfo)
-    ),
+    },
 )
 _sym_db.RegisterMessage(FollowInfo)
 
 Image = _reflection.GeneratedProtocolMessageType(
     "Image",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_IMAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _IMAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Image)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Image)
 
 NinePatchSetting = _reflection.GeneratedProtocolMessageType(
     "NinePatchSetting",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_NINEPATCHSETTING,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _NINEPATCHSETTING,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.NinePatchSetting)
-    ),
+    },
 )
 _sym_db.RegisterMessage(NinePatchSetting)
 
 ImageContent = _reflection.GeneratedProtocolMessageType(
     "ImageContent",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_IMAGECONTENT,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _IMAGECONTENT,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.ImageContent)
-    ),
+    },
 )
 _sym_db.RegisterMessage(ImageContent)
 
 PushFrame = _reflection.GeneratedProtocolMessageType(
     "PushFrame",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_PUSHFRAME,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _PUSHFRAME,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.PushFrame)
-    ),
+    },
 )
 _sym_db.RegisterMessage(PushFrame)
 
 kk = _reflection.GeneratedProtocolMessageType(
     "kk",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_KK,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _KK,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.kk)
-    ),
+    },
 )
 _sym_db.RegisterMessage(kk)
 
 SendMessageBody = _reflection.GeneratedProtocolMessageType(
     "SendMessageBody",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_SENDMESSAGEBODY,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _SENDMESSAGEBODY,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.SendMessageBody)
-    ),
+    },
 )
 _sym_db.RegisterMessage(SendMessageBody)
 
 ExtList = _reflection.GeneratedProtocolMessageType(
     "ExtList",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_EXTLIST,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _EXTLIST,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.ExtList)
-    ),
+    },
 )
 _sym_db.RegisterMessage(ExtList)
 
 Rsp = _reflection.GeneratedProtocolMessageType(
     "Rsp",
     (_message.Message,),
-    dict(
-        F=_reflection.GeneratedProtocolMessageType(
+    {
+        "F": _reflection.GeneratedProtocolMessageType(
             "F",
             (_message.Message,),
-            dict(
-                DESCRIPTOR=_RSP_F,
-                __module__="dy_pb2"
+            {
+                "DESCRIPTOR": _RSP_F,
+                "__module__": "dy_pb2",
                 # @@protoc_insertion_point(class_scope:douyin.Rsp.F)
-            ),
+            },
         ),
-        DESCRIPTOR=_RSP,
-        __module__="dy_pb2"
+        "DESCRIPTOR": _RSP,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.Rsp)
-    ),
+    },
 )
 _sym_db.RegisterMessage(Rsp)
 _sym_db.RegisterMessage(Rsp.F)
@@ -9031,22 +9032,22 @@ _sym_db.RegisterMessage(Rsp.F)
 PreMessage = _reflection.GeneratedProtocolMessageType(
     "PreMessage",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_PREMESSAGE,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _PREMESSAGE,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.PreMessage)
-    ),
+    },
 )
 _sym_db.RegisterMessage(PreMessage)
 
 HeadersList = _reflection.GeneratedProtocolMessageType(
     "HeadersList",
     (_message.Message,),
-    dict(
-        DESCRIPTOR=_HEADERSLIST,
-        __module__="dy_pb2"
+    {
+        "DESCRIPTOR": _HEADERSLIST,
+        "__module__": "dy_pb2",
         # @@protoc_insertion_point(class_scope:douyin.HeadersList)
-    ),
+    },
 )
 _sym_db.RegisterMessage(HeadersList)
 

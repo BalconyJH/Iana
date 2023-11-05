@@ -1,21 +1,22 @@
-import asyncio
 import random
+import asyncio
 from datetime import datetime
 
+from nonebot.log import logger
+from nonebot.adapters.onebot.v11 import Message
 from apscheduler.events import (
     EVENT_JOB_ERROR,
-    EVENT_JOB_EXECUTED,
     EVENT_JOB_MISSED,
+    EVENT_JOB_EXECUTED,
     EVENT_SCHEDULER_STARTED,
 )
-from nonebot.adapters.onebot.v11 import Message
-from nonebot.log import logger
 
 from ...database import DB as db
 from ...utils import safe_send, scheduler
 from ..utils_dy import create_aweme_msg, get_user_dynamics
 
-# users = [{"name":"一千夏🥥", "sec_uid":"MS4wLjABAAAALUW2eoJvmC2Q29Qhv82Db8S8V6dWMczwQfqEc1-XFaS2yxMn7oGFcJHnTkOUZAzC"}]
+# users = [{"name":"一千夏🥥", "sec_uid":"MS4wLjABAAAALUW2eoJvmC2Q29Qhv82Db8S8V6dWMczwQfqEc1-XFaS2yxMn7oGFcJHnTkOUZAzC"}] # noqa E501
+offset_dy = {}  # 记录每个用户最新的动态 id
 
 
 async def dy_sched():
@@ -58,7 +59,7 @@ async def dy_sched():
         return
 
     if latest_aweme_id > last_aweme_id:
-        desc = str(latest_aweme["desc"]).split("\n")  # desc 有两行，第二行为 tag 列表
+        desc = str(latest_aweme["desc"]).split("\n")  # desc 有两行，第二行为 tag 列表 1
         offset_dy[sec_uid] = latest_aweme_id
         await db.update_user_dy(sec_uid, latest_aweme["author"]["nickname"])
     else:
@@ -75,7 +76,8 @@ async def dy_sched():
             type_id=sets.group_id,
             message=msg,
             at=False,
-            prefix=f"{random.randint(1, 9)} ",  # ios 要求第一个字符必须是数字才允许app读取剪贴板
+            # ios 要求第一个字符必须是数字才允许app读取剪贴板
+            prefix=f"{random.randint(1, 9)} ",
         )
 
 

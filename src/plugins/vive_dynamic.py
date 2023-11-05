@@ -1,14 +1,14 @@
 from loguru import logger
-from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
-from nonebot.adapters.onebot.v11.event import MessageEvent
 from nonebot.internal.matcher import Matcher
-from nonebot.params import ArgPlainText, CommandArg
+from nonebot.params import CommandArg, ArgPlainText
+from nonebot.adapters.onebot.v11.event import MessageEvent
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 
 from .. import config
 from ..bili_auth import bili_auth
-from ..utils import get_dynamic_screenshot, get_user_dynamics, on_command, to_me
-from ..utils.bilibili_request import get_b23_url
 from ..utils.uid_extract import uid_extract
+from ..utils.bilibili_request import get_b23_url
+from ..utils import to_me, on_command, get_user_dynamics, get_dynamic_screenshot
 
 # from bilireq.grpc.dynamic import grpc_get_user_dynamics
 # from bilireq.grpc.protos.bilibili.app.dynamic.v2.dynamic_pb2 import DynamicType

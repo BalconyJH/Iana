@@ -1,11 +1,10 @@
-# coding=utf-8
 """
 :author: Lyzen
 :date: 2023.01.13
 :brief: 录制管理
 """
-from dylr.core.recording import Recording
 from dylr.util import logger
+from dylr.core.recording import Recording
 
 rooms = []
 recordings = []

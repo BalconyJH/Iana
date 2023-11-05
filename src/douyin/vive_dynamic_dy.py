@@ -1,13 +1,13 @@
 import random
 
 from loguru import logger
-from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
-from nonebot.adapters.onebot.v11.event import MessageEvent
 from nonebot.internal.matcher import Matcher
-from nonebot.params import ArgPlainText, CommandArg
+from nonebot.params import CommandArg, ArgPlainText
+from nonebot.adapters.onebot.v11.event import MessageEvent
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 
-from ..utils import on_command, to_me
-from .utils_dy import create_aweme_msg, get_sec_user_id, get_user_dynamics
+from ..utils import to_me, on_command
+from .utils_dy import get_sec_user_id, create_aweme_msg, get_user_dynamics
 
 vive_dy = on_command(
     "查看抖音", aliases={"查询抖音", "抖音动态"}, rule=to_me(), priority=5, block=True

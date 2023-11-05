@@ -3,20 +3,20 @@
 :date: 2023.04.23
 :brief: 通过 Web_Rid、直播间地址、直播间短链、主播主页 获取主播房间信息
 """
+import re
 import json
 import random
-import re
 import threading
 import traceback
 from functools import partial
 from tkinter import messagebox
 
 import requests
+from dylr.util import logger
+from dylr.core.room import Room
 
 # Web_Rid 纯数字
 from dylr.core import app, config, dy_api, monitor, record_manager
-from dylr.core.room import Room
-from dylr.util import logger
 
 re_num = re.compile(r"^\d*$")
 # 使用 Web_Rid 的网址
@@ -45,7 +45,10 @@ def try_add_room(info):
         logger.error_and_print("添加主播失败，请确认输入的内容是否符合要求\n如果符合要求，可能是接口失效，请换种方式。")
         logger.error_and_print(traceback.format_exc())
     if app.win_mode:
-        messagebox.askokcancel("添加主播失败", "请确认输入的内容是否符合要求\n如果符合要求，可能是接口失效，请换种方式。")
+        messagebox.askokcancel(
+            "添加主播失败",
+            "请确认输入的内容是否符合要求\n如果符合要求，可能是接口失效，请换种方式。",
+        )
 
 
 def find_live(info):
@@ -99,7 +102,8 @@ def find_user(info: str):
     if nickname is None:
         if app.win_mode:
             messagebox.askokcancel(
-                "添加主播失败", f"无法获取{sec_user_id}的信息，请您稍后重试\n若一直不行，可能是接口已封禁，请通过其他方式添加主播"
+                "添加主播失败",
+                f"无法获取{sec_user_id}的信息，请您稍后重试\n若一直不行，可能是接口已封禁，请通过其他方式添加主播",
             )
             return
     if web_rid is not None:
@@ -117,4 +121,7 @@ def find_user(info: str):
         config.save_rooms()
         if app.win_mode:
             app.win.add_room(room)
-            messagebox.askokcancel("添加主播成功", f"获取到主播{nickname}，但未开播。将会在开播时获取其直播间链接。")
+            messagebox.askokcancel(
+                "添加主播成功",
+                f"获取到主播{nickname}，但未开播。将会在开播时获取其直播间链接。",
+            )

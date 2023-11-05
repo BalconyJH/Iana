@@ -1,12 +1,12 @@
-﻿from typing import List
+from typing import List
 
-from nonebot.adapters.onebot.v11 import Bot, MessageSegment
-from nonebot.adapters.onebot.v11.event import MessageEvent
 from nonebot.matcher import matchers
+from nonebot.adapters.onebot.v11.event import MessageEvent
+from nonebot.adapters.onebot.v11 import Bot, MessageSegment
 
 from .. import config
-from ..utils import on_command, text_to_img
 from ..version import __version__
+from ..utils import on_command, text_to_img
 
 help = on_command("帮助", aliases={"help"}, priority=5, block=True)  # 数值越小优先级越高
 
@@ -46,10 +46,7 @@ async def _(event: MessageEvent, bot: Bot):
                     plugin_names.append(f"关注|取关{func_name}")
 
     message += "\n".join(plugin_names) + "\n"
-    message += "网易点歌\n"
-    message += "绘画\n------------------------\n"
     message += "示例：开启动态 123456\n"
-    message += 'Tips：只发送 "绘画" 两个字将显示详细绘画帮助内容\n'
 
     message = MessageSegment.image(await text_to_img(message, width=425))
     message += f"\n当前版本：v{__version__}\n" "https://github.com/Misaka-Mikoto-Tech"

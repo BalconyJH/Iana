@@ -1,10 +1,10 @@
-from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
-from nonebot.adapters.onebot.v11.event import GroupMessageEvent
 from nonebot.internal.matcher import Matcher
-from nonebot.params import ArgPlainText, CommandArg
+from nonebot.params import CommandArg, ArgPlainText
+from nonebot.adapters.onebot.v11.event import GroupMessageEvent
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 
 from ...database import DB as db
-from ...utils import on_command, permission_check, to_me
+from ...utils import to_me, on_command, permission_check
 
 delete_sub_dy = on_command(
     "取关抖音", aliases={"抖音取关"}, rule=to_me(), priority=5, block=True

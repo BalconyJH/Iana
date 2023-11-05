@@ -2,12 +2,15 @@ from nonebot.adapters.onebot.v11 import Bot
 from nonebot.adapters.onebot.v11.event import GroupMessageEvent
 
 from ...database import DB as db
-from ...utils import on_command, to_me
+from ...utils import to_me, on_command
 
 sub_list_dy = on_command(
-    "抖音关注列表", aliases={"抖音列表", "抖音订阅列表"}, rule=to_me(), priority=5, block=True
+    "抖音关注列表",
+    aliases={"抖音列表", "抖音订阅列表"},
+    rule=to_me(),
+    priority=5,
+    block=True,
 )
-print(sub_list_dy)
 sub_list_dy.__doc__ = """抖音关注列表"""
 
 

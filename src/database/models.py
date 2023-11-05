@@ -1,5 +1,5 @@
-from tortoise.fields.data import BooleanField, CharField, IntField, TextField
 from tortoise.models import Model
+from tortoise.fields.data import IntField, CharField, TextField, BooleanField
 
 
 class BaseModel(Model):

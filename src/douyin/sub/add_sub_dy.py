@@ -1,13 +1,13 @@
 import re
 
-from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
-from nonebot.adapters.onebot.v11.event import GroupMessageEvent
 from nonebot.internal.matcher import Matcher
-from nonebot.params import ArgPlainText, CommandArg
+from nonebot.params import CommandArg, ArgPlainText
+from nonebot.adapters.onebot.v11.event import GroupMessageEvent
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 
 from ...database import DB as db
-from ...utils import on_command, permission_check, to_me
-from ..utils_dy import get_room_id_and_sec_uid_from_live_url, get_sec_user_id
+from ...utils import to_me, on_command, permission_check
+from ..utils_dy import get_sec_user_id, get_room_id_and_sec_uid_from_live_url
 
 add_sub_dy = on_command(
     "抖音关注", aliases={"关注抖音", "抖音订阅"}, rule=to_me(), priority=5, block=True
