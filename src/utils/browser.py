@@ -2,9 +2,6 @@ import asyncio
 import os
 import re
 import sys
-import json
-import time
-import platform
 from pathlib import Path
 from typing import Optional
 
@@ -12,8 +9,8 @@ from nonebot.log import logger
 from playwright.__main__ import main
 
 try:
-    from playwright.async_api import Browser, async_playwright
     from playwright._impl._api_structures import FloatRect
+    from playwright.async_api import Browser, async_playwright
 except ImportError:
     raise ImportError(
         "加载失败，请先安装 Visual C++ Redistributable: "
@@ -62,8 +59,10 @@ async def get_dynamic_screenshot_mobile(dynamic_id):
     if config.haruka_browser_ua:
         user_agent = config.haruka_browser_ua
     else:
-        user_agent = ("Mozilla/5.0 (Linux; Android 11; RMX3161 Build/RKQ1.201217.003; wv) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36")
+        user_agent = (
+            "Mozilla/5.0 (Linux; Android 11; RMX3161 Build/RKQ1.201217.003; wv) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36"
+        )
 
     browser: Browser = await get_browser()
     context = await browser.new_context(
@@ -100,7 +99,7 @@ async def get_dynamic_screenshot_mobile(dynamic_id):
 
         # 出现了验证码，等下一次重来
         if await page.query_selector(".geetest_panel"):
-            logger.info(f'截图动态时遇到了验证码，等下一次重来: {url}')
+            logger.info(f"截图动态时遇到了验证码，等下一次重来: {url}")
             return None
         # await page.add_script_tag(
         #     content=
@@ -250,13 +249,15 @@ async def check_playwright_env():
 async def get_github_screenshot(url: str):
     """github issue, pr截图"""
 
-    assert (re.search('/issues/|/pull/|/blob/', url))
+    assert re.search("/issues/|/pull/|/blob/", url)
 
     if config.haruka_browser_ua:
         user_agent = config.haruka_browser_ua
     else:
-        user_agent = ("Mozilla/5.0 (Linux; Android 11; RMX3161 Build/RKQ1.201217.003; wv) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36")
+        user_agent = (
+            "Mozilla/5.0 (Linux; Android 11; RMX3161 Build/RKQ1.201217.003; wv) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36"
+        )
 
     browser: Browser = await get_browser()
     context = await browser.new_context(
@@ -278,24 +279,24 @@ async def get_github_screenshot(url: str):
             load_success = True
         except Exception as e0:
             load_success = False
-            logger.error(f'访问github页面出错, 尝试继续执行: {e0.args}')
+            logger.error(f"访问github页面出错, 尝试继续执行: {e0.args}")
 
         await page.add_script_tag(path=github_js)
-        await page.evaluate('removeExtraDoms()')
+        await page.evaluate("removeExtraDoms()")
 
         if load_success:
             await page.wait_for_load_state("networkidle")
             await page.wait_for_load_state("domcontentloaded")
 
-        body = await page.query_selector('body')
+        body = await page.query_selector("body")
         body_clip = await body.bounding_box() if body else None
         if body_clip:
-            body_clip['x'] = 0.0
-            body_clip['y'] = 0.0
+            body_clip["x"] = 0.0
+            body_clip["y"] = 0.0
         screenshot = await page.screenshot(clip=body_clip, full_page=True)
         return screenshot
 
-    except Exception as e:
+    except Exception:
         logger.exception(f"截取github网页时发生错误：{url}")
         return await page.screenshot(full_page=True)
     finally:

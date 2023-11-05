@@ -1,7 +1,7 @@
 import asyncio
 import sys
 from pathlib import Path
-from typing import List, Optional, Union, Tuple
+from typing import Union
 
 import httpx
 import nonebot
@@ -25,9 +25,8 @@ from nonebot.permission import SUPERUSER, Permission
 from nonebot.rule import Rule
 from nonebot_plugin_guild_patch import ChannelDestroyedNoticeEvent, GuildMessageEvent
 
-from ..cli.handle_message_sent import GroupMessageSentEvent
-
 from .. import config
+from ..cli.handle_message_sent import GroupMessageSentEvent
 
 
 def get_path(*other):
@@ -39,11 +38,16 @@ def get_path(*other):
         # dir_path = Path.cwd().joinpath('data', 'src')
     return str(dir_path.joinpath(*other))
 
+
 async def text_to_img(text, width=500):
     import nonebot_plugin_htmlrender
+
     css_path = str(Path(__file__).parent / "text_to_pic.css")
-    img = await nonebot_plugin_htmlrender.text_to_pic(text, css_path=css_path, width=width)
+    img = await nonebot_plugin_htmlrender.text_to_pic(
+        text, css_path=css_path, width=width
+    )
     return img
+
 
 async def handle_uid(
     matcher: Matcher,
@@ -53,19 +57,21 @@ async def handle_uid(
     if uid:
         matcher.set_arg("uid", command_arg)
 
+
 async def handle_uid_and_live_tips(
     matcher: Matcher,
     command_arg: Message = CommandArg(),
 ):
     arg = command_arg.extract_plain_text()
-    if arg.find(':') == -1:
-        arg += ':'
-    args = arg.split(':')
+    if arg.find(":") == -1:
+        arg += ":"
+    args = arg.split(":")
     uid = args[0]
-    live_tips = ':'.join(args[1:])
+    live_tips = ":".join(args[1:])
     if uid:
         matcher.set_arg("uid", Message(uid.strip()))
-    matcher.set_arg("live_tips", Message(live_tips)) # live_tips允许为空白
+    matcher.set_arg("live_tips", Message(live_tips))  # live_tips允许为空白
+
 
 async def uid_check(
     matcher: Matcher,
@@ -93,18 +99,23 @@ GUILD_ADMIN: Permission = Permission(_guild_admin)
 
 
 async def permission_check(
-    matcher:Matcher,
+    matcher: Matcher,
     bot: Bot,
-    event: Union[GroupMessageEvent, GroupMessageSentEvent, PrivateMessageEvent, GuildMessageEvent]
+    event: Union[
+        GroupMessageEvent, GroupMessageSentEvent, PrivateMessageEvent, GuildMessageEvent
+    ],
 ):
     """检查推送相关操作是否有权限，无权限时抛出 FinishedException 异常"""
     bot_id = int(bot.self_id)
+
     async def check_exclusive_bot():
         if (bot_id in config.exclusive_bots) and (event.sender.user_id != bot_id):
             await bot.send(event, "权限不足，本bot为独占模式，不允许其它用户控制")
             raise FinishedException
-        
-        if (bot_id in config.super_user_mode_bots) and (not await SUPERUSER(bot, event)):
+
+        if (bot_id in config.super_user_mode_bots) and (
+            not await SUPERUSER(bot, event)
+        ):
             await bot.send(event, "权限不足，本bot仅允许超级管理员控制")
             raise FinishedException
 
@@ -132,6 +143,7 @@ async def permission_check(
     await bot.send(event, "权限不足，目前只有管理员才能使用")
     raise FinishedException
 
+
 async def group_only(
     matcher: Matcher, event: PrivateMessageEvent, command: str = RawCommand()
 ):
@@ -150,7 +162,7 @@ def to_me():
     return Rule(_to_me)
 
 
-async def safe_send(bot_id, send_type, type_id, message, at=False, prefix = None):
+async def safe_send(bot_id, send_type, type_id, message, at=False, prefix=None):
     """发送出现错误时, 尝试重新发送, 并捕获异常且不会中断运行"""
 
     async def _safe_send(bot, send_type, type_id, message):
@@ -206,7 +218,7 @@ async def safe_send(bot_id, send_type, type_id, message, at=False, prefix = None
     try:
         return await _safe_send(bot, send_type, type_id, message)
     except ActionFailed as e:
-        msg = str(e.info['msg']) if ('msg' in e.info) else ''
+        str(e.info["msg"]) if ("msg" in e.info) else ""
         # if msg == "GROUP_NOT_FOUND":
         #     from ..database import DB as db
 
@@ -238,7 +250,9 @@ async def get_type_id(event: Union[MessageEvent, ChannelDestroyedNoticeEvent]):
     ):
         from ..database import DB as db
 
-        return await db.get_guild_type_id(guild_id=event.guild_id, channel_id=event.channel_id, bot_id=event.self_id)
+        return await db.get_guild_type_id(
+            guild_id=event.guild_id, channel_id=event.channel_id, bot_id=event.self_id
+        )
     return event.group_id if isinstance(event, GroupMessageEvent) else event.user_id
 
 
@@ -270,7 +284,7 @@ def on_startup():
         try:
             asyncio.get_event_loop().run_until_complete(check_playwright_env())
         except Exception as ex:
-            logger.error(f'check_playwright_env error:{ex}')
+            logger.error(f"check_playwright_env error:{ex}")
         # 创建数据存储目录
         if not Path(get_path()).is_dir():
             Path(get_path()).mkdir(parents=True)
@@ -286,4 +300,3 @@ require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler  # noqa
 
 from .browser import get_dynamic_screenshot, get_github_screenshot  # noqa
-from .get_dynamic_list import get_user_dynamics

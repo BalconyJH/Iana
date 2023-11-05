@@ -1,8 +1,3 @@
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
-from nonebot.plugin import on_keyword
-from nonebot.matcher import Matcher
-from nonebot.permission import SUPERUSER
-
 # on_recall = on_keyword({"撤回"}, permission=SUPERUSER)
 
 # @on_recall.handle()

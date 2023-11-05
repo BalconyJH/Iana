@@ -4,17 +4,16 @@
 :date: 2023.01.13
 :brief: 直播开播检测
 """
-import time
 import random
 import threading
+import time
 import traceback
 from threading import Thread
 
 import requests
-
+from dylr.core import app, config, dy_api, monitor_thread_manager, record_manager
 from dylr.core.room_info import RoomInfo
-from dylr.util import logger, cookie_utils
-from dylr.core import config, record_manager, app, dy_api, monitor_thread_manager
+from dylr.util import cookie_utils, logger
 
 # 重要房间检测线程
 important_room_threads = []
@@ -74,16 +73,18 @@ def important_monitor(room):
         if not record_manager.is_recording(room):
             try:
                 check_room(room)
-            except Exception as err:
+            except Exception:
                 logger.fatal_and_print(traceback.format_exc())
                 pass  # 防止报错停止检测线程
-        time.sleep(config.get_important_check_period() +
-                   random.uniform(0, config.get_important_check_period_random_offset()))
+        time.sleep(
+            config.get_important_check_period()
+            + random.uniform(0, config.get_important_check_period_random_offset())
+        )
 
 
 def check_thread_main():
     if not record_manager.get_monitor_rooms():
-        logger.info_and_print('检测房间列表为空')
+        logger.info_and_print("检测房间列表为空")
     global check_rooms_queue
     while True:
         # logger.debug_and_print('new task for checking')
@@ -96,7 +97,10 @@ def check_thread_main():
         for future in futures:
             future.result()
         # 等待一定时间后再进行下一轮检测
-        time.sleep(config.get_check_period()+random.uniform(0, config.get_check_period_random_offset()))
+        time.sleep(
+            config.get_check_period()
+            + random.uniform(0, config.get_check_period_random_offset())
+        )
 
 
 def check_thread_task():
@@ -117,7 +121,7 @@ def check_thread_task():
         start_time = time.time()
         try:
             check_room(room)
-        except Exception as err:
+        except Exception:
             logger.fatal_and_print(traceback.format_exc())
             pass  # 防止报错停止检测线程
 
@@ -131,10 +135,12 @@ def check_thread_task():
 def check_room(room):
     try:
         check_room_using_api(room)
-    except (requests.exceptions.ConnectionError,
-            requests.exceptions.ChunkedEncodingError,
-            requests.exceptions.ReadTimeout,
-            requests.exceptions.ProxyError):
+    except (
+        requests.exceptions.ConnectionError,
+        requests.exceptions.ChunkedEncodingError,
+        requests.exceptions.ReadTimeout,
+        requests.exceptions.ProxyError,
+    ):
         logger.debug(traceback.format_exc())
 
 
@@ -145,7 +151,7 @@ def rooms_without_web_rid_thread():
         for room in record_manager.get_room_without_web_rid():
             nickname, web_rid = dy_api.get_user_info(room.user_sec_id)
             if web_rid is not None:
-                logger.info(f'发现主播{nickname}开播，获取webrid: {web_rid}')
+                logger.info(f"发现主播{nickname}开播，获取webrid: {web_rid}")
                 if app.win_mode:
                     app.win.remove_room(room.room_id)
                 room.room_id = web_rid
@@ -166,6 +172,6 @@ def check_room_using_api(room):
         return
     room_info = RoomInfo(room, room_json)
     if room_info.is_going_on_live():
-        logger.info_and_print(f'检测到 {room.room_name}({room.room_id}) 开始直播，启动录制。')
+        logger.info_and_print(f"检测到 {room.room_name}({room.room_id}) 开始直播，启动录制。")
 
         record_manager.start_recording(room, room_info)

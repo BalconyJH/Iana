@@ -7,8 +7,15 @@
 
 
 class Room:
-    def __init__(self, room_id: str, room_name: str, auto_record: bool, record_danmu: bool, important: bool,
-                 user_sec_id: str = None):
+    def __init__(
+        self,
+        room_id: str,
+        room_name: str,
+        auto_record: bool,
+        record_danmu: bool,
+        important: bool,
+        user_sec_id: str = None,
+    ):
         self.room_id = room_id
         self.room_name = room_name
         self.auto_record = auto_record

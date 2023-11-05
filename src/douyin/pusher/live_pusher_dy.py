@@ -1,43 +1,44 @@
 import asyncio
 import random
 import time
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Dict
-from dataclasses import dataclass, astuple
 
 from nonebot.log import logger
 
-from nonebot.adapters.onebot.v11.message import MessageSegment
-
-from ...utils import scheduler, safe_send
 from ...database import DB as db
-
+from ...utils import safe_send, scheduler
 from ..core import dy_api
 from ..core.room_info import RoomInfo
 from ..utils_dy import cookie_utils, create_live_msg
 
 # users = [{"name":"一千夏🥥", "sec_user_id":"MS4wLjABAAAALUW2eoJvmC2Q29Qhv82Db8S8V6dWMczwQfqEc1-XFaS2yxMn7oGFcJHnTkOUZAzC", "room_id": 65276150732}]
 
+
 @dataclass
 class LiveStatusData:
     """直播间状态数据"""
-    is_streaming:bool # 是否在直播
-    online_time:float = 0
-    offline_time:float = 0
 
-all_status:Dict[str,LiveStatusData] = {} # [sec_user_id, LiveStatusData]
+    is_streaming: bool  # 是否在直播
+    online_time: float = 0
+    offline_time: float = 0
 
-def format_time_span(seconds:float)->str:
+
+all_status: Dict[str, LiveStatusData] = {}  # [sec_user_id, LiveStatusData]
+
+
+def format_time_span(seconds: float) -> str:
     m, s = divmod(seconds, 60)
     h, m = divmod(m, 60)
     return f"{int(h)}小时{int(m)}分"
-    
+
+
 @scheduler.scheduled_job("interval", seconds=10, id="live_sched_dy")
 async def live_sched_dy():
     """dy直播推送"""
 
     sec_uid: str = str(await db.next_uid_dy("live"))
-    if not sec_uid: # 未找到
+    if not sec_uid:  # 未找到
         # 没有订阅先暂停一秒再跳过，不然会导致 CPU 占用过高
         await asyncio.sleep(1)
         return
@@ -56,13 +57,13 @@ async def live_sched_dy():
         await cookie_utils.record_cookie_failed()
         return
     room_info = RoomInfo(room_json)
-    
+
     new_status = await room_info.is_going_on_live()
     if sec_uid not in all_status:
         all_status[sec_uid] = LiveStatusData(new_status)
         return
-    
-    status_data = all_status[sec_uid] 
+
+    status_data = all_status[sec_uid]
     old_status = status_data.is_streaming
     if new_status == old_status:  # 直播间状态无变化
         return
@@ -70,7 +71,7 @@ async def live_sched_dy():
 
     if new_status:  # 开播
         status_data.online_time = time.time()
-        logger.info(f'检测到抖音 {user.name}({user.room_id}) 开播。标题:{room_info.get_title()}')
+        logger.info(f"检测到抖音 {user.name}({user.room_id}) 开播。标题:{room_info.get_title()}")
         live_msg = await create_live_msg(user, room_info)
     else:  # 下播
         status_data.offline_time = time.time()
@@ -86,17 +87,20 @@ async def live_sched_dy():
     for sets in push_list:
         await safe_send(
             bot_id=sets.bot_id,
-            send_type='group',
+            send_type="group",
             type_id=sets.group_id,
             message=live_msg,
             at=False,
-            prefix=f'{random.randint(1, 9)} 'if new_status else None, # ios 要求第一个字符必须是数字才允许app读取剪贴板
+            prefix=f"{random.randint(1, 9)} "
+            if new_status
+            else None,  # ios 要求第一个字符必须是数字才允许app读取剪贴板
         )
 
 
-@scheduler.scheduled_job("interval", seconds=3.5 * 3600, id="live_sched_dy_auto_get_cookie")
+@scheduler.scheduled_job(
+    "interval", seconds=3.5 * 3600, id="live_sched_dy_auto_get_cookie"
+)
 async def live_scheh_dy_auto_get_cookie():
     """dy直播临时cookie定时刷新"""
 
     await cookie_utils.auto_get_cookie()
-

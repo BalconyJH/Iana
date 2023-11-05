@@ -16,11 +16,21 @@ def get_rooms() -> list:
 
 
 def get_auto_record_rooms() -> list:
-    return [room for room in rooms if room.auto_record and '将会在开播时获取' not in str(room.room_id)]
+    return [
+        room
+        for room in rooms
+        if room.auto_record and "将会在开播时获取" not in str(room.room_id)
+    ]
 
 
 def get_monitor_rooms() -> list:
-    res = [room for room in rooms if room.auto_record and not room.important and '将会在开播时获取' not in str(room.room_id)]
+    res = [
+        room
+        for room in rooms
+        if room.auto_record
+        and not room.important
+        and "将会在开播时获取" not in str(room.room_id)
+    ]
     for rec in recordings:
         if rec.room in res:
             res.remove(rec.room)
@@ -28,11 +38,15 @@ def get_monitor_rooms() -> list:
 
 
 def get_room_without_web_rid() -> list:
-    return [room for room in rooms if room.auto_record and '将会在开播时获取' in str(room.room_id)]
+    return [
+        room for room in rooms if room.auto_record and "将会在开播时获取" in str(room.room_id)
+    ]
 
 
 def get_important_rooms() -> list:
-    return [room for room in rooms if room.important and '将会在开播时获取' not in str(room.room_id)]
+    return [
+        room for room in rooms if room.important and "将会在开播时获取" not in str(room.room_id)
+    ]
 
 
 def get_recordings() -> list:
@@ -52,7 +66,7 @@ def is_recording(room) -> bool:
 
 def start_recording(room, room_info):
     if is_recording(room):
-        logger.warning_and_print(f'{room.room_name}({room.room_id}) 已经在录制了')
+        logger.warning_and_print(f"{room.room_name}({room.room_id}) 已经在录制了")
         return
     recording = Recording(room, room_info)
     recording.start()

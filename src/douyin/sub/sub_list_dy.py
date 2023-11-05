@@ -1,13 +1,15 @@
 from nonebot.adapters.onebot.v11 import Bot
-from nonebot.adapters.onebot.v11.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.onebot.v11.event import GroupMessageEvent
 
 from ...database import DB as db
-from ...utils import get_type_id, on_command, permission_check, to_me
-from ... import config
+from ...utils import on_command, to_me
 
-sub_list_dy = on_command("抖音关注列表", aliases={"抖音列表", "抖音订阅列表"}, rule=to_me(), priority=5, block=True)
+sub_list_dy = on_command(
+    "抖音关注列表", aliases={"抖音列表", "抖音订阅列表"}, rule=to_me(), priority=5, block=True
+)
 print(sub_list_dy)
 sub_list_dy.__doc__ = """抖音关注列表"""
+
 
 @sub_list_dy.handle()
 async def _(event: GroupMessageEvent, bot: Bot):
@@ -17,10 +19,8 @@ async def _(event: GroupMessageEvent, bot: Bot):
     for sub in subs:
         user = await db.get_user_dy(sec_uid=sub.sec_uid)
         if user and user.room_id != 0:
-            room_msg = f'({user.room_id})'
+            room_msg = f"({user.room_id})"
         else:
-            room_msg = ''
-        message += (
-            f"{sub.name}{room_msg}\n"
-        )
+            room_msg = ""
+        message += f"{sub.name}{room_msg}\n"
     await sub_list_dy.finish(message.rstrip())

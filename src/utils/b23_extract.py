@@ -1,5 +1,5 @@
-import re
 import contextlib
+import re
 
 from loguru import logger
 
@@ -24,5 +24,3 @@ async def b23_extract(text: str):
         return str(url)
     except TypeError:
         return None
-
-

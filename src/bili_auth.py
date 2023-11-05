@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, List, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from bilireq.auth import Auth
 from nonebot.log import logger
@@ -11,12 +11,13 @@ from . import config
 
 class BiliAuth(BaseSettings):
     """Bilibili用户认证相关数据，其中cookie有两种来源，分别从Auth和浏览器获取"""
+
     auth: Optional[Auth]
     is_logined: bool
 
     def set_auth(self, auth: Auth):
         self.auth = auth
-        self.is_logined = auth != None
+        self.is_logined = auth is not None
 
     def remove_auth(self):
         self.auth = None
@@ -24,9 +25,7 @@ class BiliAuth(BaseSettings):
 
     def get_list_auth_cookies(self, domain: str = ".bilibili.com") -> List[Any]:
         """获取token auth的list类型的cookie数据"""
-        cookies_raw = (
-            self.auth["origin"]["cookie_info"]["cookies"] if self.auth else []
-        )
+        cookies_raw = self.auth["origin"]["cookie_info"]["cookies"] if self.auth else []
         return [
             {
                 "name": ck["name"],
@@ -51,7 +50,15 @@ class BiliAuth(BaseSettings):
 
         try:
             cookies_raw = json.loads(Path(config.haruka_cookie_file).read_text("utf-8"))  # type: ignore
-            cookies = [{"name": ck["name"], "value": ck["value"], "path": ck["path"], "domain": ck["domain"]} for ck in cookies_raw]
+            cookies = [
+                {
+                    "name": ck["name"],
+                    "value": ck["value"],
+                    "path": ck["path"],
+                    "domain": ck["domain"],
+                }
+                for ck in cookies_raw
+            ]
         except Exception as e:
             logger.error(f"读取cookie文件失败:{e}")
 
@@ -82,7 +89,9 @@ class BiliAuth(BaseSettings):
         if not config.haruka_cookie_file:
             logger.error("无法将cookie写入文件, 没有配置浏览器cookie文件路径")
             return
-        Path(config.haruka_cookie_file).write_text(json.dumps(cookies, indent=2, ensure_ascii=False))
+        Path(config.haruka_cookie_file).write_text(
+            json.dumps(cookies, indent=2, ensure_ascii=False)
+        )
 
 
 bili_auth = BiliAuth(auth=None, is_logined=False)

@@ -8,18 +8,23 @@ from apscheduler.events import (
     EVENT_JOB_MISSED,
     EVENT_SCHEDULER_STARTED,
 )
-from bilireq.grpc.dynamic import grpc_get_user_dynamics
-from bilireq.grpc.protos.bilibili.app.dynamic.v2.dynamic_pb2 import DynamicType
 from grpc import StatusCode
 from grpc.aio import AioRpcError
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from nonebot.log import logger
 
 from ... import config
+from ...bili_auth import bili_auth
 from ...database import DB as db
 from ...database import dynamic_offset as offset
-from ...utils import get_dynamic_screenshot, safe_send, scheduler, get_user_dynamics, bilibili_request
-from ...bili_auth import bili_auth
+from ...utils import (
+    bilibili_request,
+    get_dynamic_screenshot,
+    get_user_dynamics,
+    safe_send,
+    scheduler,
+)
+
 
 async def dy_sched():
     """动态推送"""
@@ -33,7 +38,7 @@ async def dy_sched():
         # 没有订阅先暂停一秒再跳过，不然会导致 CPU 占用过高
         await asyncio.sleep(1)
         return
-    await asyncio.sleep(random.uniform(5, 10)) # 随机等待几秒钟，防止被风控
+    await asyncio.sleep(random.uniform(5, 10))  # 随机等待几秒钟，防止被风控
 
     user = await db.get_user(uid=uid)
     assert user is not None
@@ -51,16 +56,18 @@ async def dy_sched():
 
         user_agent: str = config.haruka_browser_ua or (
             "Mozilla/5.0 (Linux; Android 11; RMX3161 Build/RKQ1.201217.003; wv) AppleWebKit/537.36 "
-         "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36")
-        
-        dynamics: list = (await get_user_dynamics(
-            int(uid), 
-            bili_auth.get_dict_auth_cookies(),
-            user_agent,
-            timeout=config.haruka_dynamic_timeout,
-            proxies=config.haruka_proxy
+            "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36"
+        )
+
+        dynamics: list = (
+            await get_user_dynamics(
+                int(uid),
+                bili_auth.get_dict_auth_cookies(),
+                user_agent,
+                timeout=config.haruka_dynamic_timeout,
+                proxies=config.haruka_proxy,
             )
-            )["items"]
+        )["items"]
     except AioRpcError as e:
         if e.code() == StatusCode.DEADLINE_EXCEEDED:
             logger.error("爬取动态超时，将在下个轮询中重试")
@@ -69,7 +76,7 @@ async def dy_sched():
             logger.error("爬取动态错误，Stream removed，将在下个轮询中重试")
             return
         else:
-            await asyncio.sleep(5 * 60) # 防止刷屏
+            await asyncio.sleep(5 * 60)  # 防止刷屏
         raise
 
     if not dynamics:  # 没发过动态
@@ -89,7 +96,8 @@ async def dy_sched():
         else:  # 第一个可能是置顶动态，但置顶也可能是最新一条，所以取前两条的最大值
             offset[uid] = max(
                 # int(dynamics[0].extend.dyn_id_str), int(dynamics[1].extend.dyn_id_str)
-                int(dynamics[0]["id_str"]), int(dynamics[1]["id_str"])
+                int(dynamics[0]["id_str"]),
+                int(dynamics[1]["id_str"]),
             )
         return
 
@@ -110,7 +118,7 @@ async def dy_sched():
                 logger.debug(f"无需推送的动态 {dynamic['type']}，已跳过：{url}")
                 offset[uid] = dynamic_id
                 return
-            
+
             logger.info(f"检测到新动态（{dynamic_id}）：{name}（{uid}）")
             image = await get_dynamic_screenshot(dynamic_id)
             if image is None:
@@ -127,13 +135,19 @@ async def dy_sched():
                 "DYNAMIC_TYPE_MUSIC": "发布了新音频",
             }
 
-            if dynamic['type'] == 'DYNAMIC_TYPE_AV':  # 视频动态直接放视频链接，动态里的视频框在App上视频点不动（可能是B站bug）
-                jump_url: str = dynamic['modules']['module_dynamic']['major']['archive']['jump_url']
-                BV = jump_url[len('//www.bilibili.com/video/'):-1]
-                jump_url = f'https://b23.tv/{BV}'
+            if (
+                dynamic["type"] == "DYNAMIC_TYPE_AV"
+            ):  # 视频动态直接放视频链接，动态里的视频框在App上视频点不动（可能是B站bug）
+                jump_url: str = dynamic["modules"]["module_dynamic"]["major"][
+                    "archive"
+                ]["jump_url"]
+                BV = jump_url[len("//www.bilibili.com/video/") : -1]
+                jump_url = f"https://b23.tv/{BV}"
             else:
-                jump_url = await bilibili_request.get_b23_url(f"https://t.bilibili.com/{dynamic_id}")
-                
+                jump_url = await bilibili_request.get_b23_url(
+                    f"https://t.bilibili.com/{dynamic_id}"
+                )
+
             message = (
                 f"{name} {type_msg.get(dynamic['type'], type_msg[0])}：\n"
                 + MessageSegment.image(image)

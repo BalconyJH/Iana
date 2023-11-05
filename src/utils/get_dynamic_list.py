@@ -1,11 +1,10 @@
 from typing import Any, Dict, Optional
-from bilireq.utils import get, DEFAULT_HEADERS
+
+from bilireq.utils import DEFAULT_HEADERS, get
+
 
 async def get_user_dynamics(
-    uid: int,
-    cookies: Optional[Dict[str, Any]],
-    ua: str,
-    **kwargs
+    uid: int, cookies: Optional[Dict[str, Any]], ua: str, **kwargs
 ):
     """根据 UID 批量获取动态信息"""
     url = "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space"
@@ -13,7 +12,9 @@ async def get_user_dynamics(
     headers = {
         **DEFAULT_HEADERS,
         **{
-           "User-Agent": ua,
-           "Origin": "https://space.bilibili.com",
-           "Referer": f"https://space.bilibili.com/{uid}/dynamic"}}
+            "User-Agent": ua,
+            "Origin": "https://space.bilibili.com",
+            "Referer": f"https://space.bilibili.com/{uid}/dynamic",
+        },
+    }
     return await get(url, params=data, headers=headers, cookies=cookies, **kwargs)

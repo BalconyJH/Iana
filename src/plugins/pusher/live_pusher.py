@@ -1,4 +1,7 @@
-import asyncio
+import time
+from dataclasses import dataclass
+from typing import Dict
+
 from bilireq.live import get_rooms_info_by_uids
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from nonebot.log import logger
@@ -7,26 +10,28 @@ from ... import config
 from ...database import DB as db
 from ...utils import PROXIES, safe_send, scheduler
 
-from dataclasses import dataclass, astuple
-import time
-from typing import Dict
-from ...bili_auth import bili_auth
 
 @dataclass
 class LiveStatusData:
     """直播间状态数据"""
-    status_code:int
-    online_time:float = 0
-    offline_time:float = 0
 
-all_status:Dict[str,LiveStatusData] = {} # [uid, LiveStatusData]
+    status_code: int
+    online_time: float = 0
+    offline_time: float = 0
 
-def format_time_span(seconds:float)->str:
+
+all_status: Dict[str, LiveStatusData] = {}  # [uid, LiveStatusData]
+
+
+def format_time_span(seconds: float) -> str:
     m, s = divmod(seconds, 60)
     h, m = divmod(m, 60)
     return f"{int(h)}小时{int(m)}分"
 
-@scheduler.scheduled_job("interval", seconds=config.haruka_live_interval, id="live_sched")
+
+@scheduler.scheduled_job(
+    "interval", seconds=config.haruka_live_interval, id="live_sched"
+)
 async def live_sched():
     """直播推送"""
 
@@ -38,7 +43,9 @@ async def live_sched():
 
     if not uids:  # 订阅为空
         return
-    logger.debug(f"爬取直播列表，目前开播{sum(o.status_code for o in all_status.values())}人，总共{len(uids)}人")
+    logger.debug(
+        f"爬取直播列表，目前开播{sum(o.status_code for o in all_status.values())}人，总共{len(uids)}人"
+    )
     try:
         res = await get_rooms_info_by_uids(uids, reqtype="web", proxies=PROXIES)
     except Exception as e:
@@ -52,7 +59,7 @@ async def live_sched():
         if uid not in all_status:
             all_status[uid] = LiveStatusData(new_status)
             continue
-        status_data:LiveStatusData = all_status[uid]
+        status_data: LiveStatusData = all_status[uid]
         old_status = status_data.status_code
         if new_status == old_status:  # 直播间状态无变化
             continue
@@ -71,7 +78,9 @@ async def live_sched():
             logger.info(f"检测到开播：{name}（{uid}）")
 
             live_msg = (
-                f"{name} 正在直播\n--------------------\n标题：{title}\n分区：{area_name}\n" + MessageSegment.image(cover) + f"\n{url}"
+                f"{name} 正在直播\n--------------------\n标题：{title}\n分区：{area_name}\n"
+                + MessageSegment.image(cover)
+                + f"\n{url}"
             )
         else:  # 下播
             status_data.offline_time = time.time()
@@ -89,7 +98,11 @@ async def live_sched():
             real_live_msg = live_msg
             if new_status and sets.live_tips:
                 # 自定义开播提示词
-                real_live_msg = f"{sets.live_tips}\n--------------------\n标题：{title}\n分区：{area_name}\n" + MessageSegment.image(cover) + f"\n{url}"
+                real_live_msg = (
+                    f"{sets.live_tips}\n--------------------\n标题：{title}\n分区：{area_name}\n"
+                    + MessageSegment.image(cover)
+                    + f"\n{url}"
+                )
             await safe_send(
                 bot_id=sets.bot_id,
                 send_type=sets.type,

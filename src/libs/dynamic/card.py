@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Json
 
-from .user_profile import UserProfile, Info
+from .user_profile import Info, UserProfile
 
 
 class Picture(BaseModel):

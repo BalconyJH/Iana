@@ -1,18 +1,18 @@
 import re
+from typing import Any, List, Optional, Union
 
 from loguru import logger
-from typing import Any, List, Union, Optional
 
+from ..bili_auth import bili_auth
 from ..database.db import DB as db
 from .b23_extract import b23_extract
 from .bilibili_request import search_user
-from ..bili_auth import bili_auth
 
 
-async def uid_extract(text: str)-> Union[Optional[str], List[Any]]:
+async def uid_extract(text: str) -> Union[Optional[str], List[Any]]:
     if text.strip().isdigit():
         return text.strip()
-    
+
     logger.debug(f"[UID Extract] Original Text: {text}")
     if user_data := await db.get_user(name=text):
         logger.debug(f"[UID Extract] 数据库中找到:{user_data}")

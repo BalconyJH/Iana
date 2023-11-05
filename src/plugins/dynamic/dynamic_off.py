@@ -23,7 +23,7 @@ dynamic_off.got("uid", prompt="请输入要关闭动态的UID")(uid_check)
 
 
 @dynamic_off.handle()
-async def _(event: MessageEvent, bot:Bot, uid: str = ArgPlainText("uid")):
+async def _(event: MessageEvent, bot: Bot, uid: str = ArgPlainText("uid")):
     """根据 UID 关闭动态"""
     if await db.set_sub(
         "dynamic",

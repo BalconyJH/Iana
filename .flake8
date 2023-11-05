@@ -6,7 +6,9 @@ exclude =
     */_test/,
     */test/,
     data/,
-max-line-length = 90
+    .venv/,
+    logs/,
+max-line-length = 88
 statistics = True
 ; ignore =
 ;     W503,

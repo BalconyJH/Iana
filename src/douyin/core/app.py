@@ -5,16 +5,16 @@
 :brief: app主文件
 """
 
+import logging
 import os
+import platform
 import signal
 import sys
-import logging
-import platform
 import threading
 
-from dylr.core import version, config, record_manager, monitor
-from dylr.util import logger
+from dylr.core import config, monitor, record_manager, version
 from dylr.plugin import plugin
+from dylr.util import logger
 
 win_mode = False
 win = None
@@ -34,16 +34,16 @@ def init(gui_mode: bool):
 
     plugin.on_open(gui_mode)
 
-    logger.info(f'software started. version: {version}. gui: {gui_mode}.')
-    logger.info(f'platform: {platform.platform()}')
-    logger.info(f'python version: {platform.python_version()}')
+    logger.info(f"software started. version: {version}. gui: {gui_mode}.")
+    logger.info(f"platform: {platform.platform()}")
+    logger.info(f"python version: {platform.python_version()}")
     if not gui_mode:
-        if sys.platform == 'win32':
-            os.system('chcp 65001')
-        print('=' * 80)
-        print(f'Douyin Live Recorder v.{version} by Lyzen')
-        print(f'软件仅供科研数据挖掘与学习交流，因错误使用而造成的危害由使用者负责。')
-        print('=' * 80)
+        if sys.platform == "win32":
+            os.system("chcp 65001")
+        print("=" * 80)
+        print(f"Douyin Live Recorder v.{version} by Lyzen")
+        print("软件仅供科研数据挖掘与学习交流，因错误使用而造成的危害由使用者负责。")
+        print("=" * 80)
 
     config.read_configs()
     if config.debug():
@@ -63,17 +63,18 @@ def init(gui_mode: bool):
 def start_gui():
     global stop_all_threads
     from dylr.gui import app_win
+
     app_win.ApplicationWin()
     # GUI被关闭时，继续往下运行
     stop_all_threads = True
-    logger.info_and_print('GUI closed')
+    logger.info_and_print("GUI closed")
     plugin.on_close()
 
 
 def sigint_handler(signum, frame):
     global stop_all_threads
     stop_all_threads = True
-    logger.fatal_and_print('catched SIGINT(Ctrl+C) signal')
+    logger.fatal_and_print("catched SIGINT(Ctrl+C) signal")
     plugin.on_close()
 
 
@@ -82,15 +83,15 @@ def check_dependencies():
     has_websocket = True
     has_protobuf = True
     try:
-        import requests
+        pass
     except:
         has_requests = False
     try:
-        import websocket
+        pass
     except:
         has_websocket = False
     try:
-        import google.protobuf
+        pass
     except:
         has_protobuf = False
 
@@ -98,17 +99,21 @@ def check_dependencies():
         return True
     res = []
     if not has_requests:
-        res.append('requests')
+        res.append("requests")
     if not has_websocket:
-        res.append('websocket-client')
+        res.append("websocket-client")
     if not has_protobuf:
-        res.append('protobuf')
+        res.append("protobuf")
 
     if win_mode:
-        if sys.platform == 'win32':
-            os.system(f'start cmd /C "chcp 65001 & '
-                      f'echo 缺少依赖{res}，请运行(安装依赖.bat)或运行命令(python -m pip install -r requirements.txt) & '
-                      f'pause"')
+        if sys.platform == "win32":
+            os.system(
+                f'start cmd /C "chcp 65001 & '
+                f"echo 缺少依赖{res}，请运行(安装依赖.bat)或运行命令(python -m pip install -r requirements.txt) & "
+                f'pause"'
+            )
         else:
-            print(f'echo 缺少依赖{res}，请运行(安装依赖.bat)或运行命令(python -m pip install -r requirements.txt)')
+            print(
+                f"echo 缺少依赖{res}，请运行(安装依赖.bat)或运行命令(python -m pip install -r requirements.txt)"
+            )
     return False

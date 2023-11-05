@@ -1,5 +1,3 @@
-from typing import Union
-
 # from nonebot import on_notice
 # from nonebot.adapters.onebot.v11 import Bot
 # from nonebot.adapters.onebot.v11 import GroupDecreaseNoticeEvent

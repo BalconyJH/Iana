@@ -12,32 +12,32 @@ class RoomInfo:
         self.room_json = room_json
 
     def get_real_room_id(self):
-        """ 获取 id_str , 不是 web_rid """
-        return self.room_json['id_str']
+        """获取 id_str , 不是 web_rid"""
+        return self.room_json["id_str"]
 
     async def is_going_on_live(self) -> bool:
-        """ 是否在直播 """
-        if not self.room_json or 'status' not in self.room_json:
+        """是否在直播"""
+        if not self.room_json or "status" not in self.room_json:
             await cookie_utils.record_cookie_failed()
             return False
-        return self.room_json['status'] == 2
+        return self.room_json["status"] == 2
 
     def get_stream_url(self):
-        """ 直播流地址 """
-        if not self.room_json or 'stream_url' not in self.room_json:
+        """直播流地址"""
+        if not self.room_json or "stream_url" not in self.room_json:
             return None
-        return self.room_json['stream_url']['flv_pull_url']['FULL_HD1']
+        return self.room_json["stream_url"]["flv_pull_url"]["FULL_HD1"]
 
     def get_nick_name(self):
-        """ 主播名 """
-        if not self.room_json or 'owner' not in self.room_json:
+        """主播名"""
+        if not self.room_json or "owner" not in self.room_json:
             return None
-        return self.room_json['owner']['nickname']
-    
+        return self.room_json["owner"]["nickname"]
+
     def get_title(self):
         """获取直播标题"""
-        return self.room_json['title']
-    
+        return self.room_json["title"]
+
     def get_cover_url(self):
         """获取直播封面"""
-        return self.room_json['cover']['url_list'][0]
+        return self.room_json["cover"]["url_list"][0]
