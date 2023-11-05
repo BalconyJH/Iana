@@ -68,9 +68,7 @@ async def _(
 
         if isinstance(sec_uid, list):
             return await add_sub_dy.send(
-                MessageSegment.at(event.user_id)
-                + f" 未找到{user_name}, 你是否想要找:\n"
-                + "\n".join([item["user_info"]["nickname"] for item in sec_uid[:10]])
+                MessageSegment.at(event.user_id) + f" 未找到{user_name}"
             )
 
     room_str = f"({room_id})" if room_id != 0 else ""
