@@ -2,7 +2,7 @@ function removeExtraDoms() {
   const doms = [
     ".js-header-wrapper",
     ".gh-header-actions",
-    // '#repos-sticky-header',
+    // "#repos-sticky-header",
     "nav.js-repo-nav",
     ".Layout-sidebar",
     ".discussion-timeline-actions",
@@ -81,11 +81,8 @@ function removeExtraDoms() {
     } catch (e) {}
   }
 
-  /**
-   * 底部加一些空白
-   * desc: playwright的bounding_box不会计算 border,margin, 因此需要多放一个
-   */
-  for (let i = 0; i < 2; i++) {
+  // 底部加一些空白
+  {
     let eleBottom = document.createElement("div");
     eleBottom.style.clear = "both";
     eleBottom.style.marginBottom = "30px";
@@ -94,4 +91,7 @@ function removeExtraDoms() {
 
   // pull/01/files#diff-... 页面会被滚动到选中行，需要给它复位
   document.documentElement.scrollTop = 0;
+
+  // playwright 截长图中间会空白，因此把页面高度返回
+  return document.documentElement.scrollHeight;
 }

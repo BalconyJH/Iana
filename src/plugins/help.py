@@ -6,9 +6,11 @@ from nonebot.adapters.onebot.v11 import Bot, MessageSegment
 
 from .. import config
 from ..version import __version__
-from ..utils import on_command, text_to_img
+from ..utils import to_me, on_command, text_to_img
 
-help = on_command("帮助", aliases={"help"}, priority=5, block=True)  # 数值越小优先级越高
+help = on_command(
+    "帮助", aliases={"help"}, rule=to_me(), priority=5, block=True
+)  # 数值越小优先级越高
 
 
 @help.handle()
@@ -49,5 +51,5 @@ async def _(event: MessageEvent, bot: Bot):
     message += "示例：开启动态 123456\n"
 
     message = MessageSegment.image(await text_to_img(message, width=425))
-    message += f"\n当前版本：v{__version__}\n" "https://github.com/Misaka-Mikoto-Tech"
+    message += f"\n当前版本：v{__version__}\n"
     await help.finish(message)

@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import asyncio
+import platform
 from pathlib import Path
 from typing import Optional
 
@@ -28,10 +29,10 @@ github_js = Path(__file__).parent.joinpath("github_page.js")
 async def init_browser(**kwargs) -> Browser:
     global _browser
     p = await async_playwright().start()
-    # if platform.system() == 'Windows':
-    #     _browser = await p.chromium.launch(proxy={"server": "per-context"}, **kwargs)
-    # else:
-    _browser = await p.chromium.launch(**kwargs)
+    if platform.system() == "Windows":
+        _browser = await p.chromium.launch(proxy={"server": "per-context"}, **kwargs)
+    else:
+        _browser = await p.chromium.launch(**kwargs)
     return _browser
 
 
@@ -64,7 +65,8 @@ async def get_dynamic_screenshot_mobile(dynamic_id):
             "(KHTML, like Gecko) Version/4.0 Chrome/101.0.4896.59 Mobile Safari/537.36"
         )
 
-    browser: Browser = await get_browser()
+    p = await async_playwright().start()
+    browser: Browser = await p.chromium.launch()
     context = await browser.new_context(
         proxy=None,
         device_scale_factor=2,
@@ -157,7 +159,8 @@ async def get_dynamic_screenshot_mobile(dynamic_id):
 async def get_dynamic_screenshot_pc(dynamic_id):
     """电脑端动态截图"""
     url = f"https://t.bilibili.com/{dynamic_id}"
-    browser = await get_browser()
+    p = await async_playwright().start()
+    browser: Browser = await p.chromium.launch()
     context = await browser.new_context(
         proxy={"server": config.haruka_proxy} if config.haruka_proxy else None,
         viewport={"width": 2560, "height": 1080},
@@ -251,6 +254,8 @@ async def get_github_screenshot(url: str):
 
     assert re.search("/issues/|/pull/|/blob/", url)
 
+    page_width = 800
+
     if config.haruka_browser_ua:
         user_agent = config.haruka_browser_ua
     else:
@@ -265,7 +270,7 @@ async def get_github_screenshot(url: str):
         proxy={"server": config.overseas_proxy} if config.overseas_proxy else None,
         device_scale_factor=2,
         user_agent=user_agent,
-        viewport={"width": 800, "height": 600},
+        viewport={"width": page_width, "height": 600},
     )
     page = await context.new_page()
 
@@ -282,7 +287,8 @@ async def get_github_screenshot(url: str):
             logger.error(f"访问github页面出错, 尝试继续执行: {e0.args}")
 
         await page.add_script_tag(path=github_js)
-        await page.evaluate("removeExtraDoms()")
+        page_height = await page.evaluate("removeExtraDoms()")
+        await page.set_viewport_size({"width": page_width, "height": page_height})
 
         if load_success:
             await page.wait_for_load_state("networkidle")
@@ -293,6 +299,7 @@ async def get_github_screenshot(url: str):
         if body_clip:
             body_clip["x"] = 0.0
             body_clip["y"] = 0.0
+            body_clip["height"] = min(body_clip["height"], 32766)  # 限制高度
         screenshot = await page.screenshot(clip=body_clip, full_page=True)
         return screenshot
 

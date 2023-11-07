@@ -11,6 +11,7 @@ if isinstance(globals()["__loader__"], PluginLoader):
     on_startup()
 
     from . import plugins  # noqa: F401
-    from . import douyin  # noqa: F401
+
+    # from . import douyin  # noqa: F401
 
 from .version import VERSION, __version__  # noqa: F401
