@@ -210,11 +210,20 @@ async def safe_send(  # noqa: C901
         logger.error("尝试失败，所有 Bot 均无法推送")
         return
 
-    if at and (
-        send_type == "guild"
-        or (await bot.get_group_at_all_remain(group_id=type_id))["can_at_all"]
-    ):
-        message = MessageSegment.at("all") + message
+    try:
+        if at and (
+            send_type == "guild"
+            or (await bot.get_group_at_all_remain(group_id=type_id))["can_at_all"]
+        ):
+            message = MessageSegment.at("all") + message
+    except ActionFailed as e:
+        msg = str(e.info["msg"]) if ("msg" in e.info) else ""
+        if msg == "GROUP_NOT_FOUND":
+            from ..database import DB as db
+
+            await db.delete_sub_list(type="group", type_id=type_id, bot_id=bot_id)
+            await db.delete_group(group_id=type_id, bot_id=bot_id)
+            logger.error(f"推送失败，群（{type_id}）不存在，已自动清理群订阅列表")
 
     if prefix:
         message = prefix + message
