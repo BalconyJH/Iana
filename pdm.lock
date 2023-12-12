@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:acf0f4c27572e64a358d03096fd33f78b02aed60d8d7f25b38d0f701298ce20f"
+content_hash = "sha256:2037ce42a695610327bbaa845571938dc2a4690e2c0b6848128d37d99c4f8220"
 
 [[package]]
 name = "aiofiles"
@@ -580,6 +580,21 @@ files = [
     {file = "fonttools-4.44.0-cp39-cp39-win_amd64.whl", hash = "sha256:2e91e19b583961979e2e5a701269d3cfc07418963bee717f8160b0a24332826b"},
     {file = "fonttools-4.44.0-py3-none-any.whl", hash = "sha256:b9beb0fa6ff3ea808ad4a6962d68ac0f140ddab080957b20d9e268e4d67fb335"},
     {file = "fonttools-4.44.0.tar.gz", hash = "sha256:4e90dd81b6e0d97ebfe52c0d12a17a9ef7f305d6bfbb93081265057d6092f252"},
+]
+
+[[package]]
+name = "githubkit"
+version = "0.10.7"
+requires_python = ">=3.8,<4.0"
+summary = "GitHub SDK for Python"
+dependencies = [
+    "httpx<1.0.0,>=0.23.0",
+    "pydantic<2.0.0,>=1.9.1",
+    "typing-extensions<5.0.0,>=4.3.0",
+]
+files = [
+    {file = "githubkit-0.10.7-py3-none-any.whl", hash = "sha256:c3993e7b79e719e4cace328310e87108c6ea7eacdc9ea94ea00aebd6a856abeb"},
+    {file = "githubkit-0.10.7.tar.gz", hash = "sha256:b0a8a42feefad6604fee3faaba01ca0d0d215574f9d4557c1586c1dd926dc1e0"},
 ]
 
 [[package]]
