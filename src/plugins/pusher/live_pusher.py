@@ -1,14 +1,15 @@
 import time
-from dataclasses import dataclass
+import asyncio
 from typing import Dict
+from dataclasses import dataclass
 
+from nonebot.log import logger
 from bilireq.live import get_rooms_info_by_uids
 from nonebot.adapters.onebot.v11.message import MessageSegment
-from nonebot.log import logger
 
 from ... import config
 from ...database import DB as db
-from ...utils import PROXIES, safe_send, scheduler
+from ...utils import PROXIES, safe_send, scheduler, format_time_span
 
 
 @dataclass
@@ -23,16 +24,10 @@ class LiveStatusData:
 all_status: Dict[str, LiveStatusData] = {}  # [uid, LiveStatusData]
 
 
-def format_time_span(seconds: float) -> str:
-    m, s = divmod(seconds, 60)
-    h, m = divmod(m, 60)
-    return f"{int(h)}小时{int(m)}分"
-
-
 @scheduler.scheduled_job(
     "interval", seconds=config.haruka_live_interval, id="live_sched"
 )
-async def live_sched():
+async def live_sched():  # noqa: C901
     """直播推送"""
 
     # if not bili_auth.is_logined:
@@ -66,6 +61,10 @@ async def live_sched():
         status_data.status_code = new_status
 
         name = info["uname"]
+        title = ""
+        area_name = ""
+        cover = ""
+        url = ""
         if new_status:  # 开播
             status_data.online_time = time.time()
             room_id = info["short_id"] if info["short_id"] else info["room_id"]
@@ -95,6 +94,7 @@ async def live_sched():
         # 推送
         push_list = await db.get_push_list(uid, "live")
         for sets in push_list:
+            logger.debug(sets.__dict__)
             real_live_msg = live_msg
             if new_status and sets.live_tips:
                 # 自定义开播提示词
@@ -108,6 +108,7 @@ async def live_sched():
                 send_type=sets.type,
                 type_id=sets.type_id,
                 message=real_live_msg,
-                at=bool(sets.at) if new_status else False,  # 下播不@全体
+                at=sets.at,
             )
+            await asyncio.sleep(0.7)
         await db.update_user(int(uid), name)
