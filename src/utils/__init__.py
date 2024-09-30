@@ -1,4 +1,5 @@
 import sys
+import time
 import asyncio
 from pathlib import Path
 from typing import Any, Dict, Union, Optional
@@ -28,6 +29,18 @@ from nonebot.adapters.onebot.v11 import (
     NetworkError,
     MessageSegment,
 )
+
+
+def format_time_span(seconds: float) -> str:
+    """格式化时长字符串"""
+    m, s = divmod(seconds, 60)
+    h, m = divmod(m, 60)
+    return f"{int(h)}小时{int(m):02}分"
+
+
+def format_time(seconds: float) -> str:
+    """格式化由 time.time() 获取的时间"""
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(seconds))
 
 
 def get_path(*other):
@@ -201,6 +214,7 @@ async def safe_send(  # noqa: C901
                 message = MessageSegment.at("all") + message
             if prefix:
                 message = prefix + message
+            logger.debug(f"raw message {message}")
             try:
                 result = await _safe_send(bot, send_type, type_id, message)
                 logger.info(f"尝试使用 Bot（{bot_id}）推送成功")
@@ -211,10 +225,7 @@ async def safe_send(  # noqa: C901
         return
 
     try:
-        if at and (
-            send_type == "guild"
-            or (await bot.get_group_at_all_remain(group_id=type_id))["can_at_all"]
-        ):
+        if at:
             message = MessageSegment.at("all") + message
     except ActionFailed as e:
         msg = str(e.info["msg"]) if ("msg" in e.info) else ""
@@ -228,6 +239,7 @@ async def safe_send(  # noqa: C901
     if prefix:
         message = prefix + message
     try:
+        logger.debug(f"raw message {message}")
         return await _safe_send(bot, send_type, type_id, message)
     except ActionFailed as e:
         str(e.info["msg"]) if ("msg" in e.info) else ""
@@ -327,3 +339,26 @@ async def get_user_dynamics(
         },
     }
     return await get(url, params=data, headers=headers, cookies=cookies, **kwargs)
+
+
+async def get_user_card(
+    mid,
+    cookies: Optional[Dict[str, Any]],
+    photo: bool = False,
+    auth=None,
+    reqtype="both",
+    **kwargs,
+) -> Dict:
+    from bilireq.utils import get
+
+    url = "https://api.bilibili.com/x/web-interface/card"
+    return (
+        await get(
+            url,
+            cookies=cookies,
+            params={"mid": mid, "photo": photo},
+            auth=auth,
+            reqtype=reqtype,
+            **kwargs,
+        )
+    )["card"]

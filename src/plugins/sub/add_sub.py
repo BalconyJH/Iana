@@ -1,19 +1,19 @@
-from bilireq.exceptions import ResponseCodeError
-from bilireq.user import get_user_info
-from nonebot.adapters.onebot.v11.event import MessageEvent
 from nonebot.params import ArgPlainText
+from bilireq.exceptions import ResponseCodeError
 from nonebot_plugin_guild_patch import GuildMessageEvent
+from nonebot.adapters.onebot.v11.event import MessageEvent
 
-from ...bili_auth import bili_auth
 from ...database import DB as db
+from ...bili_auth import bili_auth
 from ...utils import (
     PROXIES,
-    get_type_id,
-    handle_uid,
-    on_command,
-    permission_check,
     to_me,
     uid_check,
+    handle_uid,
+    on_command,
+    get_type_id,
+    get_user_card,
+    permission_check,
 )
 
 add_sub = on_command("关注", aliases={"添加主播"}, rule=to_me(), priority=5, block=True)
@@ -33,9 +33,14 @@ async def _(event: MessageEvent, uid: str = ArgPlainText("uid")):
     name = user and user.name
     if not name:
         try:
-            name = (await get_user_info(uid, proxies=PROXIES, auth=bili_auth.auth))[
-                "name"
-            ]
+            name = (
+                await get_user_card(
+                    uid,
+                    bili_auth.get_dict_auth_cookies(),
+                    proxies=PROXIES,
+                    auth=bili_auth.auth,
+                )
+            )["name"]
         except ResponseCodeError as e:
             if e.code == -400 or e.code == -404:
                 await add_sub.finish("UID不存在，注意UID不是房间号")
