@@ -2,10 +2,10 @@
 # PEP 621 project metadata
 # See https://www.python.org/dev/peps/pep-0621/
 authors = [
-    {name = "SK-415", email = "2967923486@qq.com"},
+    { name = "SK-415", email = "2967923486@qq.com" },
 ]
-license = {text = "AGPL-3.0-or-later"}
-requires-python = ">=3.8.1,<4.0"
+license = { text = "AGPL-3.0-or-later" }
+requires-python = ">=3.9,<4.0"
 dependencies = [
     "click>=8.1.3",
     "httpx>=0.24.0",
@@ -31,29 +31,31 @@ dependencies = [
     "skia-python>=87.5",
     "emoji>=2.6.0",
     "dynamicadaptor>=0.4.5",
-    "bilirpc>=0.1.3",
     "nonebot-plugin-sentry>=0.5.0",
     "nonebot-plugin-picstatus>=0.5.3",
     "githubkit>=0.10.7",
+    "nonebot-plugin-sentry>=0.4.1",
 ]
-name = "haruka-bot"
-version = "1.5.3.post1"
-description = "Push dynamics and live informations from bilibili to QQ. Based on nonebot2."
+name = "Iana"
+version = "0.1.0"
+description = ""
 readme = "README.md"
-keywords = ["nonebot", "nonebot2", "qqbot", "bilibili", "bot"]
+keywords = ["bot"]
 
 [project.urls]
-homepage = "https://github.com/SK-415/HarukaBot"
-repository = "https://github.com/SK-415/HarukaBot/tree/master/src/plugins/haruka_bot"
-documentation = "https://github.com/SK-415/HarukaBot#readme"
+homepage = "https://github.com/BalconyJH/Iana"
+repository = "https://github.com/BalconyJH/Iana"
 
+[project.optional-dependencies]
+test = [
+    "pytest-mock>=3.14.0",
+]
 [tool.pdm.dev-dependencies]
 dev = [
     "isort>=5.12.0",
     "black>=23.7.0",
     "pre-commit>=3.3.3",
     "flake8>=6.1.0",
-    "nonebot-plugin-sentry>=0.4.1",
 ]
 
 [tool.nonebot]
@@ -72,14 +74,36 @@ requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
 
 [tool.ruff]
-select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q"]
-ignore = ["E402", "C901", "UP037"]
-
 line-length = 88
-target-version = "py38"
+target-version = "py39"
+
 
 [tool.ruff.lint]
-ignore = ["E501"]
+select = [
+    "F", # Pyflakes
+    "W", # pycodestyle warnings
+    "E", # pycodestyle errors
+    "UP", # pyupgrade
+    "ASYNC", # flake8-async
+    "C4", # flake8-comprehensions
+    "T10", # flake8-debugger
+    "T20", # flake8-print
+    "PYI", # flake8-pyi
+    "PT", # flake8-pytest-style
+    "Q", # flake8-quotes
+    "RUF", # Ruff-specific rules
+    "I", # isort
+]
+ignore = [
+    "E402", # module-import-not-at-top-of-file
+    "E501", # line-too-long
+    "UP037", # quoted-annotation
+    "RUF001", # ambiguous-unicode-character-string
+    "RUF002", # ambiguous-unicode-character-docstring
+    "RUF003", # ambiguous-unicode-character-comment
+    "ASYNC230", # blocking-open-call-in-async-function
+]
+
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
@@ -91,7 +115,7 @@ indent-style = "space"
 
 [tool.black]
 line-length = 88
-target-version = ["py38", "py39", "py310", "py311"]
+target-version = ["py39", "py310", "py311", "py312"]
 include = '\.pyi?$'
 extend-exclude = '''
 '''
@@ -102,5 +126,21 @@ line_length = 88
 length_sort = true
 skip_gitignore = true
 force_sort_within_sections = true
-src_paths = ["nonebot", "tests"]
+src_paths = ["src", "tests"]
 extra_standard_library = ["typing_extensions"]
+
+[tool.pyright]
+pythonVersion = "3.9"
+pythonPlatform = "All"
+executionEnvironments = [
+    { root = "./tests", extraPaths = [
+        "./",
+    ] },
+    { root = "./" },
+]
+typeCheckingMode = "standard"
+disableBytesTypePromotions = true
+
+[tool.pdm]
+distribution = true
+
